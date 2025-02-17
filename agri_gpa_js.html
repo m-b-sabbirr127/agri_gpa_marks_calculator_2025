@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agri GPA Calculator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f8ff;
+            color: #333;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+        h2 {
+            color: #2c3e50;
+        }
+        label {
+            display: block;
+            margin: 15px 0 5px;
+            font-weight: bold;
+        }
+        input {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin: 5px 0 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            padding: 15px 30px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #27ae60;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Agri Cluster GPA Marks Calculator</h2>
+        <label>SSC Total Marks (Out of 1300):</label>
+        <input type="number" id="sscTotal"><br>
+        <label>SSC 4th Subject Marks:</label>
+        <input type="number" id="ssc4th"><br>
+        <label>HSC Total Marks (Out of 1300):</label>
+        <input type="number" id="hscTotal"><br>
+        <label>HSC 4th Subject Marks:</label>
+        <input type="number" id="hsc4th"><br>
+        <button onclick="calculateGPA()">Calculate Marks</button>
+        <h3 id="result"></h3>
+    </div>
+
+    <script>
+        function calculateGPA() {
+            let sscTotal = parseFloat(document.getElementById("sscTotal").value);
+            let ssc4th = parseFloat(document.getElementById("ssc4th").value);
+            let hscTotal = parseFloat(document.getElementById("hscTotal").value);
+            let hsc4th = parseFloat(document.getElementById("hsc4th").value);
+            
+            let sscMarks = sscTotal - 150 - ssc4th;
+            let hscMarks = hscTotal - hsc4th;
+            
+            let sscGPA = (sscMarks / 1050) * 25;
+            let hscGPA = (hscMarks / 1100) * 25;
+            let totalGPA = sscGPA + hscGPA;
+            
+            document.getElementById("result").innerText = "Your Agri Cluster Total GPA Marks (Out of 50): " + totalGPA.toFixed(2);
+        }
+    </script>
+</body>
+</html>
