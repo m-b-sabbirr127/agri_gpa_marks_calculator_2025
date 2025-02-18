@@ -7,7 +7,7 @@
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background-color: #f5f5f7;
+            background-color: rgba(245, 245, 247, 0.9);
             color: #1d1d1f;
             text-align: center;
             margin: 0;
@@ -16,33 +16,19 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
         .container {
             max-width: 500px;
             width: 100%;
             padding: 30px;
-            background-color: #ffffff;
+            background-color: rgba(255, 255, 255, 0.9);
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
         }
-        h1 {
-            margin: 0 0 20px;
-            font-size: 24px;
-            font-weight: 600;
-            color: #1d1d1f;
-        }
-        h3 {
-            font-size: 14px;
-            color: #6e6e73;
-            margin: 10px 0;
-            font-weight: 400;
-        }
-        label {
-            display: block;
-            margin: 15px 0 5px;
-            font-weight: 500;
-            color: #1d1d1f;
-            text-align: left;
+        h1, h3, label {
+            color: inherit;
         }
         input {
             width: calc(100% - 22px);
@@ -51,16 +37,8 @@
             border: 1px solid #d2d2d7;
             border-radius: 10px;
             font-size: 16px;
-            background-color: #f5f5f7;
-            color: #1d1d1f;
-            transition: border-color 0.3s ease;
-        }
-        input:focus {
-            border-color: #007aff;
-            outline: none;
-        }
-        input::placeholder {
-            color: #a1a1a6;
+            background-color: rgba(245, 245, 247, 0.9);
+            color: inherit;
         }
         button {
             padding: 15px 30px;
@@ -70,9 +48,8 @@
             border-radius: 10px;
             cursor: pointer;
             font-size: 16px;
-            font-weight: 500;
-            transition: background-color 0.3s ease;
             width: 100%;
+            margin-top: 10px;
         }
         button:hover {
             background-color: #0063cc;
@@ -83,86 +60,74 @@
             color: #34c759;
             font-weight: 600;
         }
-        .error {
-            color: #ff3b30;
-            font-size: 14px;
-            margin-top: 10px;
-            font-weight: 500;
+        .switch {
+            margin-top: 20px;
+            background-color: #ff9500;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Agri Cluster GPA Marks Calculator</h1>
-        <h3>Input your SSC and HSC total marks. It will deduct 150 marks from your SSC marks. Then it will deduct your 4th subject's marks and will calculate your marks following the SSC/1050 and HSC/1100 rule mentioned in the Circular</h3>
-        <h3>Click on "Calculate Marks" button and scroll down to see your Calculated Marks</h3>
-
+    <div class="container" id="page1">
+        <h1>Agri Cluster GPA Calculator</h1>
         <label>SSC Total Marks (Out of 1300):</label>
-        <input type="number" id="sscTotal" min="0" max="1300" placeholder="Enter SSC Total Marks"><br>
-
+        <input type="number" id="sscTotal1"><br>
         <label>SSC 4th Subject Marks (Out of 100):</label>
-        <input type="number" id="ssc4th" min="0" max="100" placeholder="Enter SSC 4th Subject Marks"><br>
-
+        <input type="number" id="ssc4th1"><br>
         <label>HSC Total Marks (Out of 1300):</label>
-        <input type="number" id="hscTotal" min="0" max="1300" placeholder="Enter HSC Total Marks"><br>
-
+        <input type="number" id="hscTotal1"><br>
         <label>HSC 4th Subject Marks (Out of 200):</label>
-        <input type="number" id="hsc4th" min="0" max="200" placeholder="Enter HSC 4th Subject Marks"><br>
+        <input type="number" id="hsc4th1"><br>
+        <button onclick="calculateGPA1()">Calculate Marks</button>
+        <h3 id="result1"></h3>
+        <button class="switch" onclick="switchPage()">Switch to Alternate Calculation</button>
+    </div>
 
-        <button onclick="calculateGPA()">Calculate Marks</button>
-        <h3 id="result"></h3>
-        <div id="error" class="error"></div>
+    <div class="container" id="page2" style="display: none;">
+        <h1>Alternate GPA Calculator</h1>
+        <label>SSC Marks (Excluding 4th, Career & Physical Edu) (Out of 1050):</label>
+        <input type="number" id="sscTotal2"><br>
+        <label>HSC Marks (Excluding 4th Subject) (Out of 1100):</label>
+        <input type="number" id="hscTotal2"><br>
+        <button onclick="calculateGPA2()">Calculate Marks</button>
+        <h3 id="result2"></h3>
+        <button class="switch" onclick="switchPage()">Switch to Original Calculation</button>
     </div>
 
     <script>
-        function calculateGPA() {
-            const sscTotal = parseFloat(document.getElementById("sscTotal").value);
-            const ssc4th = parseFloat(document.getElementById("ssc4th").value);
-            const hscTotal = parseFloat(document.getElementById("hscTotal").value);
-            const hsc4th = parseFloat(document.getElementById("hsc4th").value);
+        function calculateGPA1() {
+            let sscTotal = parseFloat(document.getElementById("sscTotal1").value);
+            let ssc4th = parseFloat(document.getElementById("ssc4th1").value);
+            let hscTotal = parseFloat(document.getElementById("hscTotal1").value);
+            let hsc4th = parseFloat(document.getElementById("hsc4th1").value);
+            
+            if (isNaN(sscTotal) || isNaN(ssc4th) || isNaN(hscTotal) || isNaN(hsc4th)) return;
+            
+            let sscMarks = sscTotal - 150 - ssc4th;
+            let hscMarks = hscTotal - hsc4th;
+            let totalGPA = (sscMarks / 1050) * 25 + (hscMarks / 1100) * 25;
+            document.getElementById("result1").innerText = "Total GPA Marks: " + totalGPA.toFixed(2);
+        }
 
-            let errorMessage = "";
+        function calculateGPA2() {
+            let sscTotal = parseFloat(document.getElementById("sscTotal2").value);
+            let hscTotal = parseFloat(document.getElementById("hscTotal2").value);
+            
+            if (isNaN(sscTotal) || isNaN(hscTotal)) return;
+            
+            let totalGPA = (sscTotal / 1050) * 25 + (hscTotal / 1100) * 25;
+            document.getElementById("result2").innerText = "Total GPA Marks: " + totalGPA.toFixed(2);
+        }
 
-            if (isNaN(sscTotal)) {
-                errorMessage += "SSC Total Marks is required.<br>";
-            } else if (sscTotal < 0 || sscTotal > 1300) {
-                errorMessage += "SSC Total Marks must be between 0 and 1300.<br>";
-            }
-
-            if (isNaN(ssc4th)) {
-                errorMessage += "SSC 4th Subject Marks is required.<br>";
-            } else if (ssc4th < 0 || ssc4th > 100) {
-                errorMessage += "SSC 4th Subject Marks must be between 0 and 100.<br>";
-            }
-
-            if (isNaN(hscTotal)) {
-                errorMessage += "HSC Total Marks is required.<br>";
-            } else if (hscTotal < 0 || hscTotal > 1300) {
-                errorMessage += "HSC Total Marks must be between 0 and 1300.<br>";
-            }
-
-            if (isNaN(hsc4th)) {
-                errorMessage += "HSC 4th Subject Marks is required.<br>";
-            } else if (hsc4th < 0 || hsc4th > 200) {
-                errorMessage += "HSC 4th Subject Marks must be between 0 and 200.<br>";
-            }
-
-            if (errorMessage) {
-                document.getElementById("error").innerHTML = errorMessage;
-                document.getElementById("result").innerText = "";
-                return;
+        function switchPage() {
+            let page1 = document.getElementById("page1");
+            let page2 = document.getElementById("page2");
+            if (page1.style.display === "none") {
+                page1.style.display = "block";
+                page2.style.display = "none";
             } else {
-                document.getElementById("error").innerHTML = "";
+                page1.style.display = "none";
+                page2.style.display = "block";
             }
-
-            const sscMarks = sscTotal - 150 - ssc4th;
-            const hscMarks = hscTotal - hsc4th;
-
-            const sscGPA = (sscMarks / 1050) * 25;
-            const hscGPA = (hscMarks / 1100) * 25;
-            const totalGPA = sscGPA + hscGPA;
-
-            document.getElementById("result").innerText = "Your GPA Marks (Out of 50): " + totalGPA.toFixed(2);
         }
     </script>
 </body>
