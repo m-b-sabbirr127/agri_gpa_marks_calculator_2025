@@ -6,88 +6,162 @@
     <title>Agri GPA Calculator</title>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f8ff;
-            color: #333;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f5f5f7;
+            color: #1d1d1f;
             text-align: center;
             margin: 0;
             padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
         .container {
-            max-width: 600px;
-            margin: 50px auto;
-            padding: 20px;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
+            max-width: 500px;
+            width: 100%;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
-        h2 {
-            color: #2c3e50;
+        h1 {
+            margin: 0 0 20px;
+            font-size: 24px;
+            font-weight: 600;
+            color: #1d1d1f;
+        }
+        h3 {
+            font-size: 14px;
+            color: #6e6e73;
+            margin: 10px 0;
+            font-weight: 400;
         }
         label {
             display: block;
             margin: 15px 0 5px;
-            font-weight: bold;
+            font-weight: 500;
+            color: #1d1d1f;
+            text-align: left;
         }
         input {
             width: calc(100% - 22px);
-            padding: 10px;
+            padding: 12px;
             margin: 5px 0 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            border: 1px solid #d2d2d7;
+            border-radius: 10px;
             font-size: 16px;
+            background-color: #f5f5f7;
+            color: #1d1d1f;
+            transition: border-color 0.3s ease;
+        }
+        input:focus {
+            border-color: #007aff;
+            outline: none;
+        }
+        input::placeholder {
+            color: #a1a1a6;
         }
         button {
             padding: 15px 30px;
-            background-color: #3498db;
+            background-color: #007aff;
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 10px;
             cursor: pointer;
             font-size: 16px;
+            font-weight: 500;
             transition: background-color 0.3s ease;
+            width: 100%;
         }
         button:hover {
-            background-color: #2980b9;
+            background-color: #0063cc;
         }
         #result {
             margin-top: 20px;
             font-size: 18px;
-            color: #27ae60;
+            color: #34c759;
+            font-weight: 600;
+        }
+        .error {
+            color: #ff3b30;
+            font-size: 14px;
+            margin-top: 10px;
+            font-weight: 500;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Agri Cluster GPA Marks Calculator</h1>
-        <h3 style="font-size: 14px; color: #555;">Input your SSC and HSC total marks. It will deduct 150 marks from your SSC total marks. Then it will deduct your 4th subject's marks and will calculate your marks following the SSC/1050 and HSC/1100 rule mentioned in the circular</h3>
-        <h3 style="font-size: 14px; color: #555;">Click on 'Calculate Marks' button and scroll down to see your calculated marks</h3>
+        <h3>Input your SSC and HSC total marks. It will deduct 150 marks from your SSC marks. Then it will deduct your 4th subject's marks and will calculate your marks following the SSC/1050 and HSC/1100 rule mentioned in the circular.</h3>
+        <h3>Click on 'Calculate Marks' button and scroll down to see your calculated marks.</h3>
+
         <label>SSC Total Marks (Out of 1300):</label>
-        <input type="number" id="sscTotal"><br>
+        <input type="number" id="sscTotal" min="0" max="1300" placeholder="Enter SSC Total Marks"><br>
+
         <label>SSC 4th Subject Marks (Out of 100):</label>
-        <input type="number" id="ssc4th"><br>
+        <input type="number" id="ssc4th" min="0" max="100" placeholder="Enter SSC 4th Subject Marks"><br>
+
         <label>HSC Total Marks (Out of 1300):</label>
-        <input type="number" id="hscTotal"><br>
+        <input type="number" id="hscTotal" min="0" max="1300" placeholder="Enter HSC Total Marks"><br>
+
         <label>HSC 4th Subject Marks (Out of 200):</label>
-        <input type="number" id="hsc4th"><br>
+        <input type="number" id="hsc4th" min="0" max="200" placeholder="Enter HSC 4th Subject Marks"><br>
+
         <button onclick="calculateGPA()">Calculate Marks</button>
         <h3 id="result"></h3>
+        <div id="error" class="error"></div>
     </div>
 
     <script>
         function calculateGPA() {
-            let sscTotal = parseFloat(document.getElementById("sscTotal").value);
-            let ssc4th = parseFloat(document.getElementById("ssc4th").value);
-            let hscTotal = parseFloat(document.getElementById("hscTotal").value);
-            let hsc4th = parseFloat(document.getElementById("hsc4th").value);
-            
-            let sscMarks = sscTotal - 150 - ssc4th;
-            let hscMarks = hscTotal - hsc4th;
-            
-            let sscGPA = (sscMarks / 1050) * 25;
-            let hscGPA = (hscMarks / 1100) * 25;
-            let totalGPA = sscGPA + hscGPA;
-            
+            const sscTotal = parseFloat(document.getElementById("sscTotal").value);
+            const ssc4th = parseFloat(document.getElementById("ssc4th").value);
+            const hscTotal = parseFloat(document.getElementById("hscTotal").value);
+            const hsc4th = parseFloat(document.getElementById("hsc4th").value);
+
+            let errorMessage = "";
+
+            if (isNaN(sscTotal)) {
+                errorMessage += "SSC Total Marks is required.<br>";
+            } else if (sscTotal < 0 || sscTotal > 1300) {
+                errorMessage += "SSC Total Marks must be between 0 and 1300.<br>";
+            }
+
+            if (isNaN(ssc4th)) {
+                errorMessage += "SSC 4th Subject Marks is required.<br>";
+            } else if (ssc4th < 0 || ssc4th > 100) {
+                errorMessage += "SSC 4th Subject Marks must be between 0 and 100.<br>";
+            }
+
+            if (isNaN(hscTotal)) {
+                errorMessage += "HSC Total Marks is required.<br>";
+            } else if (hscTotal < 0 || hscTotal > 1300) {
+                errorMessage += "HSC Total Marks must be between 0 and 1300.<br>";
+            }
+
+            if (isNaN(hsc4th)) {
+                errorMessage += "HSC 4th Subject Marks is required.<br>";
+            } else if (hsc4th < 0 || hsc4th > 200) {
+                errorMessage += "HSC 4th Subject Marks must be between 0 and 200.<br>";
+            }
+
+            if (errorMessage) {
+                document.getElementById("error").innerHTML = errorMessage;
+                document.getElementById("result").innerText = "";
+                return;
+            } else {
+                document.getElementById("error").innerHTML = "";
+            }
+
+            const sscMarks = sscTotal - 150 - ssc4th;
+            const hscMarks = hscTotal - hsc4th;
+
+            const sscGPA = (sscMarks / 1050) * 25;
+            const hscGPA = (hscMarks / 1100) * 25;
+            const totalGPA = sscGPA + hscGPA;
+
             document.getElementById("result").innerText = "Your Agri Cluster Total GPA Marks (Out of 50): " + totalGPA.toFixed(2);
         }
     </script>
