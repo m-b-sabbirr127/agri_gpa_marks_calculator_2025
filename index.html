@@ -4,137 +4,400 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agri Cluster GPA Marks Calculator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background-color: rgba(245, 245, 247, 0.9);
-            color: #1d1d1f;
-            text-align: center;
+        :root {
+            --primary: #2ecc71;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --background: #f5f6fa;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--background), #dfe4ea);
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            padding: 20px;
+            overflow-x: hidden;
         }
+
         .container {
-            max-width: 500px;
+            max-width: 600px;
             width: 100%;
-            padding: 30px;
-            background-color: rgba(255, 255, 255, 0.9);
+            padding: 2rem;
+            background: var(--card-bg);
             border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(12px);
+            animation: slideIn 0.5s ease;
+            text-align: center;
         }
-        h1, h3, label {
-            color: inherit;
+
+        @keyframes slideIn {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
-        input {
-            width: calc(100% - 22px);
-            padding: 12px;
-            margin: 5px 0 20px;
-            border: 1px solid #d2d2d7;
-            border-radius: 10px;
-            font-size: 16px;
-            background-color: rgba(245, 245, 247, 0.9);
-            color: inherit;
+
+        h1 {
+            color: var(--primary);
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text; /* Webkit prefix for older browsers */
+            background-clip: text; /* Standard property for broader compatibility */
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
+            font-weight: 700;
         }
-        button {
-            padding: 15px 30px;
-            background-color: #007aff;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 16px;
-            width: 100%;
-            margin-top: 10px;
+
+        .instructions {
+            color: #7f8c8d;
+            font-weight: 400;
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+            max-width: 80%;
+            margin-left: auto;
+            margin-right: auto;
         }
-        button:hover {
-            background-color: #0063cc;
-        }
-        #result {
-            margin-top: 20px;
-            font-size: 18px;
-            color: #34c759;
+
+        .instructions span {
+            color: var(--primary);
             font-weight: 600;
         }
-        .switch {
-            margin-top: 20px;
-            background-color: #ff9500;
+
+        .input-group {
+            margin-bottom: 1.2rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ecf0f1;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: var(--transition);
+            background: rgba(245, 245, 247, 0.7);
+        }
+
+        input:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 5px rgba(46, 204, 113, 0.3);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        button {
+            padding: 16px 24px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            min-width: 150px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+
+        button:hover::after {
+            width: 300px;
+            height: 300px;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .calc-btn {
+            background: linear-gradient(45deg, var(--primary), #27ae60);
+            color: white;
+        }
+
+        .switch-btn {
+            background: linear-gradient(45deg, var(--secondary), #2980b9);
+            color: white;
+        }
+
+        .reset-btn {
+            background: linear-gradient(45deg, var(--accent), #c0392b);
+            color: white;
+        }
+
+        .theme-btn {
+            background: linear-gradient(45deg, #8e44ad, #732d91);
+            color: white;
+        }
+
+        .result-box {
+            margin-top: 1.5rem;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            background: #f8f9fb;
+            color: #2c3e50;
+            font-weight: 700;
+            font-size: 1.3rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1), inset 0 1px 3px rgba(255, 255, 255, 0.8);
+            border: 1px solid #e1e4e8;
+            max-width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 0.5s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .result-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        .result-box span {
+            color: var(--primary);
+            font-weight: 800;
+            font-size: 1.8rem;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .history {
+            margin-top: 2rem;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        @media (max-width: 480px) {
+            .container { padding: 1.5rem; }
+            h1 { font-size: 2rem; }
+            .instructions { font-size: 0.9rem; padding: 0.8rem; }
+            button { padding: 14px 20px; font-size: 1rem; min-width: 130px; }
+            .result-box { font-size: 1.1rem; padding: 0.8rem 1.2rem; }
+            .result-box span { font-size: 1.5rem; }
+            .button-group { flex-direction: column; }
         }
     </style>
 </head>
 <body>
     <div class="container" id="page1">
         <h1>Agri Cluster GPA Marks Calculator</h1>
-        <h3>If your Career and Physical Education marks are less than 150, Enter the actual value, Otherwise skip</h3>
-        <label>SSC Total Marks (Out of 1300):</label>
-        <input type="number" id="sscTotal1"><br>
-        <label>SSC 4th Subject Marks (Out of 100):</label>
-        <input type="number" id="ssc4th1"><br>
-        <label>Career and Physical Education Marks:</label>
-        <input type="number" id="cpeMarks1" placeholder="Default: 150"><br>
-        <label>HSC Total Marks (Out of 1300):</label>
-        <input type="number" id="hscTotal1"><br>
-        <label>HSC 4th Subject Marks (Out of 200):</label>
-        <input type="number" id="hsc4th1"><br>
-        <button onclick="calculateGPA1()">Calculate Marks</button>
-        <h3 id="result1"></h3>
-        <button class="switch" onclick="switchPage()">Switch to Alternate Calculation</button>
+        <div class="instructions">
+            If your <span>Career and Physical Education</span> marks are less than 150, Enter the actual value, Otherwise skip
+        </div>
+        
+        <div class="input-group">
+            <label>SSC Total Marks (Out of 1300):</label>
+            <input type="number" id="sscTotal1" placeholder="Enter total marks">
+        </div>
+        <div class="input-group">
+            <label>SSC 4th Subject Marks (Out of 100):</label>
+            <input type="number" id="ssc4th1" placeholder="Enter 4th subject marks">
+        </div>
+        <div class="input-group">
+            <label>Career and Physical Education Marks:</label>
+            <input type="number" id="cpeMarks1" placeholder="Default: 150">
+        </div>
+        <div class="input-group">
+            <label>HSC Total Marks (Out of 1300):</label>
+            <input type="number" id="hscTotal1" placeholder="Enter total marks">
+        </div>
+        <div class="input-group">
+            <label>HSC 4th Subject Marks (Out of 200):</label>
+            <input type="number" id="hsc4th1" placeholder="Enter 4th subject marks">
+        </div>
+
+        <div class="button-group">
+            <button class="calc-btn" onclick="calculateGPA1()">Calculate Marks</button>
+            <button class="switch-btn" onclick="switchPage()">Switch to Alternate Calculation</button>
+            <button class="reset-btn" onclick="resetForm('page1')">Reset</button>
+            <button class="theme-btn" onclick="toggleTheme()">Dark Mode</button>
+        </div>
+        <div class="result-box" id="result1"></div>
+        <div class="history" id="history1"></div>
     </div>
 
     <div class="container" id="page2" style="display: none;">
         <h1>Alternate GPA Marks Calculator</h1>
-        <h3>Enter SSC marks excluding 4th subject, Career and Physical Education</h3>
-        <h3>Enter HSC marks excluding 4th subject</h3>
-        <label>SSC Marks (Out of 1050):</label>
-        <input type="number" id="sscTotal2"><br>
-        <label>HSC Marks (Out of 1100):</label>
-        <input type="number" id="hscTotal2"><br>
-        <button onclick="calculateGPA2()">Calculate Marks</button>
-        <h3 id="result2"></h3>
-        <button class="switch" onclick="switchPage()">Switch to Original Calculation</button>
+        <div class="instructions">
+            Enter <span>SSC marks</span> excluding 4th subject, Career and Physical Education<br>
+            Enter <span>HSC marks</span> excluding 4th subject
+        </div>
+        
+        <div class="input-group">
+            <label>SSC Marks (Out of 1050):</label>
+            <input type="number" id="sscTotal2" placeholder="Enter core marks">
+        </div>
+        <div class="input-group">
+            <label>HSC Marks (Out of 1100):</label>
+            <input type="number" id="hscTotal2" placeholder="Enter core marks">
+        </div>
+
+        <div class="button-group">
+            <button class="calc-btn" onclick="calculateGPA2()">Calculate Marks</button>
+            <button class="switch-btn" onclick="switchPage()">Switch to Original Calculation</button>
+            <button class="reset-btn" onclick="resetForm('page2')">Reset</button>
+            <button class="theme-btn" onclick="toggleTheme()">Dark Mode</button>
+        </div>
+        <div class="result-box" id="result2"></div>
+        <div class="history" id="history2"></div>
     </div>
 
     <script>
+        let history1 = [], history2 = [];
+        let isDarkMode = false;
+
         function calculateGPA1() {
-            let sscTotal = parseFloat(document.getElementById("sscTotal1").value);
-            let ssc4th = parseFloat(document.getElementById("ssc4th1").value);
+            let sscTotal = parseFloat(document.getElementById("sscTotal1").value) || 0;
+            let ssc4th = parseFloat(document.getElementById("ssc4th1").value) || 0;
             let cpeMarks = parseFloat(document.getElementById("cpeMarks1").value) || 150;
-            let hscTotal = parseFloat(document.getElementById("hscTotal1").value);
-            let hsc4th = parseFloat(document.getElementById("hsc4th1").value);
-            
-            if (isNaN(sscTotal) || isNaN(ssc4th) || isNaN(hscTotal) || isNaN(hsc4th)) return;
-            
+            let hscTotal = parseFloat(document.getElementById("hscTotal1").value) || 0;
+            let hsc4th = parseFloat(document.getElementById("hsc4th1").value) || 0;
+
+            if (sscTotal > 1300 || ssc4th > 100 || cpeMarks > 150 || hscTotal > 1300 || hsc4th > 200) {
+                document.getElementById("result1").innerHTML = "Error: Marks exceed maximum limits!";
+                return;
+            }
+
             let sscMarks = sscTotal - cpeMarks - ssc4th;
             let hscMarks = hscTotal - hsc4th;
             let totalGPA = (sscMarks / 1050) * 25 + (hscMarks / 1100) * 25;
-            document.getElementById("result1").innerText = "Total GPA Marks: " + totalGPA.toFixed(2);
+
+            document.getElementById("result1").innerHTML = `Total GPA Marks: <span>${totalGPA.toFixed(2)}</span>`;
+            history1.unshift(`SSC: ${sscMarks}/1050, HSC: ${hscMarks}/1100, GPA: ${totalGPA.toFixed(2)}`);
+            updateHistory("history1", history1);
         }
 
         function calculateGPA2() {
-            let sscTotal = parseFloat(document.getElementById("sscTotal2").value);
-            let hscTotal = parseFloat(document.getElementById("hscTotal2").value);
-            
-            if (isNaN(sscTotal) || isNaN(hscTotal)) return;
-            
+            let sscTotal = parseFloat(document.getElementById("sscTotal2").value) || 0;
+            let hscTotal = parseFloat(document.getElementById("hscTotal2").value) || 0;
+
+            if (sscTotal > 1050 || hscTotal > 1100) {
+                document.getElementById("result2").innerHTML = "Error: Marks exceed maximum limits!";
+                return;
+            }
+
             let totalGPA = (sscTotal / 1050) * 25 + (hscTotal / 1100) * 25;
-            document.getElementById("result2").innerText = "Total GPA Marks: " + totalGPA.toFixed(2);
+            document.getElementById("result2").innerHTML = `Total GPA Marks: <span>${totalGPA.toFixed(2)}</span>`;
+            history2.unshift(`SSC: ${sscTotal}/1050, HSC: ${hscTotal}/1100, GPA: ${totalGPA.toFixed(2)}`);
+            updateHistory("history2", history2);
+        }
+
+        function updateHistory(elementId, historyArray) {
+            const historyDiv = document.getElementById(elementId);
+            historyDiv.innerHTML = "<h4>History</h4>" + historyArray.slice(0, 5).map(item => `<p>${item}</p>`).join("");
         }
 
         function switchPage() {
-            let page1 = document.getElementById("page1");
-            let page2 = document.getElementById("page2");
-            if (page1.style.display === "none") {
-                page1.style.display = "block";
-                page2.style.display = "none";
-            } else {
-                page1.style.display = "none";
-                page2.style.display = "block";
-            }
+            const page1 = document.getElementById("page1");
+            const page2 = document.getElementById("page2");
+            page1.style.display = page1.style.display === "none" ? "block" : "none";
+            page2.style.display = page2.style.display === "none" ? "block" : "none";
         }
+
+        function resetForm(pageId) {
+            const inputs = document.querySelectorAll(`#${pageId} input`);
+            inputs.forEach(input => input.value = "");
+            document.getElementById(`result${pageId.slice(-1)}`).innerHTML = "";
+        }
+
+        function toggleTheme() {
+            isDarkMode = !isDarkMode;
+            document.body.classList.toggle("dark");
+            const themeButtons = document.querySelectorAll(".theme-btn");
+            const resultBoxes = document.querySelectorAll(".result-box");
+            
+            document.body.style.background = isDarkMode 
+                ? "linear-gradient(135deg, #2c3e50, #34495e)"
+                : "linear-gradient(135deg, #f5f6fa, #dfe4ea)";
+            
+            document.querySelectorAll(".container").forEach(container => {
+                container.style.background = isDarkMode 
+                    ? "rgba(52, 73, 94, 0.95)" 
+                    : "rgba(255, 255, 255, 0.95)";
+            });
+
+            resultBoxes.forEach(box => {
+                box.style.background = isDarkMode ? "#4b5e71" : "#f8f9fb";
+                box.style.border = isDarkMode ? "1px solid #627285" : "1px solid #e1e4e8";
+                box.style.color = isDarkMode ? "#dfe4ea" : "#2c3e50";
+            });
+
+            themeButtons.forEach(btn => {
+                btn.innerText = isDarkMode ? "Light Mode" : "Dark Mode";
+            });
+        }
+
+        document.querySelectorAll("input").forEach(input => {
+            input.addEventListener("input", function() {
+                if (this.value < 0) this.value = 0;
+            });
+        });
     </script>
 </body>
 </html>
