@@ -69,10 +69,13 @@
 <body>
     <div class="container" id="page1">
         <h1>Agri Cluster GPA Marks Calculator</h1>
+        <h3>If your CPE marks is less than 150, Enter actual value, Otherwise skip</h3>
         <label>SSC Total Marks (Out of 1300):</label>
         <input type="number" id="sscTotal1"><br>
         <label>SSC 4th Subject Marks (Out of 100):</label>
         <input type="number" id="ssc4th1"><br>
+        <label>Career And Physical Edu Marks:</label>
+        <input type="number" id="cpeMarks1" placeholder="Default: 150"><br>
         <label>HSC Total Marks (Out of 1300):</label>
         <input type="number" id="hscTotal1"><br>
         <label>HSC 4th Subject Marks (Out of 200):</label>
@@ -84,7 +87,7 @@
 
     <div class="container" id="page2" style="display: none;">
         <h1>Alternate GPA Marks Calculator</h1>
-        <label>SSC Marks (Excluding 4th Subject, Career & Physical Edu) (Out of 1050):</label>
+        <label>SSC Marks (Excluding 4th Subject, Career And Physical Edu) (Out of 1050):</label>
         <input type="number" id="sscTotal2"><br>
         <label>HSC Marks (Excluding 4th Subject) (Out of 1100):</label>
         <input type="number" id="hscTotal2"><br>
@@ -97,12 +100,13 @@
         function calculateGPA1() {
             let sscTotal = parseFloat(document.getElementById("sscTotal1").value);
             let ssc4th = parseFloat(document.getElementById("ssc4th1").value);
+            let cpeMarks = parseFloat(document.getElementById("cpeMarks1").value) || 150;
             let hscTotal = parseFloat(document.getElementById("hscTotal1").value);
             let hsc4th = parseFloat(document.getElementById("hsc4th1").value);
             
             if (isNaN(sscTotal) || isNaN(ssc4th) || isNaN(hscTotal) || isNaN(hsc4th)) return;
             
-            let sscMarks = sscTotal - 150 - ssc4th;
+            let sscMarks = sscTotal - cpeMarks - ssc4th;
             let hscMarks = hscTotal - hsc4th;
             let totalGPA = (sscMarks / 1050) * 25 + (hscMarks / 1100) * 25;
             document.getElementById("result1").innerText = "Total GPA Marks: " + totalGPA.toFixed(2);
