@@ -19,6 +19,8 @@
             --dark-card: #1a1a1a;
             --dark-text: #e0e0e0;
             --dark-border: #333333;
+            --error: #e74c3c;
+            --success: #2ecc71;
         }
 
         * {
@@ -29,7 +31,9 @@
 
         body {
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, var(--background), #dfe4ea);
+            background: linear-gradient(135
+
+deg, var(--background), #dfe4ea);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -69,7 +73,7 @@
             color: var(--primary);
             font-size: 2.5rem;
             margin-bottom: 1.5rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+ طبقة النص: 2px 2px 4px rgba(0, 0, 0, 0.1);
             background: linear-gradient(45deg, var(--primary), var(--secondary));
             background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -103,6 +107,7 @@
 
         .input-group {
             margin-bottom: 1.2rem;
+            position: relative;
         }
 
         label {
@@ -136,6 +141,24 @@
             border-color: var(--primary);
             outline: none;
             box-shadow: 0 0 5px rgba(46, 204, 113, 0.3);
+        }
+
+        input.valid {
+            border-color: var(--success);
+        }
+
+        input.invalid {
+            border-color: var(--error);
+        }
+
+        .error-message {
+            color: var(--error);
+            font-size: 0.8rem;
+            position: absolute;
+            bottom: -20px;
+            left: 0;
+            width: 100%;
+            text-align: left;
         }
 
         .button-group {
@@ -200,6 +223,22 @@
             background: linear-gradient(45deg, #8e44ad, #732d91);
         }
 
+        .export-btn {
+            background: linear-gradient(45deg, #f1c40f, #e67e22);
+        }
+
+        .share-btn {
+            background: linear-gradient(45deg, #1abc9c, #16a085);
+        }
+
+        .save-btn {
+            background: linear-gradient(45deg, #ff6b6b, #ee5253);
+        }
+
+        .view-saved-btn {
+            background: linear-gradient(45deg, #6c5ce7, #a29bfe);
+        }
+
         .result-box {
             margin-top: 1.5rem;
             padding: 1rem 1.5rem;
@@ -220,6 +259,7 @@
             justify-content: center;
             align-items: center;
             gap: 0.5rem;
+            flex-direction: column;
         }
 
         body.dark-mode .result-box {
@@ -244,6 +284,16 @@
             font-weight: 800;
             font-size: 1.8rem;
             text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .summary {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            margin-top: 0.5rem;
+        }
+
+        body.dark-mode .summary {
+            color: #b0b3b8;
         }
 
         @keyframes shimmer {
@@ -305,30 +355,39 @@
         
         <div class="input-group">
             <label>SSC Total Marks (Out of 1300):</label>
-            <input type="number" id="sscTotal1" placeholder="Enter total marks">
+            <input type="number" id="sscTotal1" placeholder="Enter total marks" oninput="validateInput(this, 1300)">
+            <div class="error-message" id="sscTotal1-error"></div>
         </div>
         <div class="input-group">
             <label>SSC 4th Subject Marks (Out of 100):</label>
-            <input type="number" id="ssc4th1" placeholder="Enter 4th subject marks">
+            <input type="number" id="ssc4th1" placeholder="Enter 4th subject marks" oninput="validateInput(this, 100)">
+            <div class="error-message" id="ssc4th1-error"></div>
         </div>
         <div class="input-group">
             <label>Career and Physical Education Marks:</label>
-            <input type="number" id="cpeMarks1" placeholder="Default: 150">
+            <input type="number" id="cpeMarks1" placeholder="Default: 150" oninput="validateInput(this, 150)">
+            <div class="error-message" id="cpeMarks1-error"></div>
         </div>
         <div class="input-group">
             <label>HSC Total Marks (Out of 1300):</label>
-            <input type="number" id="hscTotal1" placeholder="Enter total marks">
+            <input type="number" id="hscTotal1" placeholder="Enter total marks" oninput="validateInput(this, 1300)">
+            <div class="error-message" id="hscTotal1-error"></div>
         </div>
         <div class="input-group">
             <label>HSC 4th Subject Marks (Out of 200):</label>
-            <input type="number" id="hsc4th1" placeholder="Enter 4th subject marks">
+            <input type="number" id="hsc4th1" placeholder="Enter 4th subject marks" oninput="validateInput(this, 200)">
+            <div class="error-message" id="hsc4th1-error"></div>
         </div>
 
         <div class="button-group">
             <button class="calc-btn" onclick="calculateGPA1()">Calculate Marks</button>
-            <button class="switch-btn" onclick="switchPage()">Switch to Alternate Calculation</button>
+            <button class="switch-btn" onclick="switchPage()">Switch to Alternate</button>
             <button class="reset-btn" onclick="resetForm('page1')">Reset</button>
             <button class="theme-btn" onclick="toggleTheme()">Dark Mode</button>
+            <button class="export-btn" onclick="exportHistory('history1')">Export History</button>
+            <button class="share-btn" onclick="shareResult('result1')">Share Result</button>
+            <button class="save-btn" onclick="saveCalculation('page1')">Save Calculation</button>
+            <button class="view-saved-btn" onclick="viewSavedCalculations()">View Saved</button>
         </div>
         <div class="result-box" id="result1"></div>
         <div class="history" id="history1"></div>
@@ -343,18 +402,24 @@
         
         <div class="input-group">
             <label>SSC Marks (Out of 1050):</label>
-            <input type="number" id="sscTotal2" placeholder="Enter core marks">
+            <input type="number" id="sscTotal2" placeholder="Enter core marks" oninput="validateInput(this, 1050)">
+            <div class="error-message" id="sscTotal2-error"></div>
         </div>
         <div class="input-group">
             <label>HSC Marks (Out of 1100):</label>
-            <input type="number" id="hscTotal2" placeholder="Enter core marks">
+            <input type="number" id="hscTotal2" placeholder="Enter core marks" oninput="validateInput(this, 1100)">
+            <div class="error-message" id="hscTotal2-error"></div>
         </div>
 
         <div class="button-group">
             <button class="calc-btn" onclick="calculateGPA2()">Calculate Marks</button>
-            <button class="switch-btn" onclick="switchPage()">Switch to Original Calculation</button>
+            <button class="switch-btn" onclick="switchPage()">Switch to Original</button>
             <button class="reset-btn" onclick="resetForm('page2')">Reset</button>
             <button class="theme-btn" onclick="toggleTheme()">Dark Mode</button>
+            <button class="export-btn" onclick="exportHistory('history2')">Export History</button>
+            <button class="share-btn" onclick="shareResult('result2')">Share Result</button>
+            <button class="save-btn" onclick="saveCalculation('page2')">Save Calculation</button>
+            <button class="view-saved-btn" onclick="viewSavedCalculations()">View Saved</button>
         </div>
         <div class="result-box" id="result2"></div>
         <div class="history" id="history2"></div>
@@ -363,6 +428,24 @@
     <script>
         let history1 = [], history2 = [];
         let isDarkMode = false;
+
+        function validateInput(input, max) {
+            const value = parseFloat(input.value) || 0;
+            const errorDiv = document.getElementById(`${input.id}-error`);
+            if (value < 0) {
+                input.classList.remove('valid');
+                input.classList.add('invalid');
+                errorDiv.textContent = 'Marks cannot be negative';
+            } else if (value > max) {
+                input.classList.remove('valid');
+                input.classList.add('invalid');
+                errorDiv.textContent = `Marks cannot exceed ${max}`;
+            } else {
+                input.classList.remove('invalid');
+                input.classList.add('valid');
+                errorDiv.textContent = '';
+            }
+        }
 
         function calculateGPA1() {
             let sscTotal = parseFloat(document.getElementById("sscTotal1").value) || 0;
@@ -378,9 +461,14 @@
 
             let sscMarks = sscTotal - cpeMarks - ssc4th;
             let hscMarks = hscTotal - hsc4th;
-            let totalGPA = (sscMarks / 1050) * 25 + (hscMarks / 1100) * 25;
+            let sscGPA = (sscMarks / 1050) * 25;
+            let hscGPA = (hscMarks / 1100) * 25;
+            let totalGPA = sscGPA + hscGPA;
 
-            document.getElementById("result1").innerHTML = `Total GPA Marks: <span>${totalGPA.toFixed(2)}</span>`;
+            document.getElementById("result1").innerHTML = `
+                Total GPA Marks: <span>${totalGPA.toFixed(2)}</span>
+                <div class="summary">SSC Contribution: ${sscGPA.toFixed(2)}, HSC Contribution: ${hscGPA.toFixed(2)}</div>
+            `;
             history1.unshift(`SSC: ${sscMarks}/1050, HSC: ${hscMarks}/1100, GPA: ${totalGPA.toFixed(2)}`);
             updateHistory("history1", history1);
         }
@@ -394,8 +482,14 @@
                 return;
             }
 
-            let totalGPA = (sscTotal / 1050) * 25 + (hscTotal / 1100) * 25;
-            document.getElementById("result2").innerHTML = `Total GPA Marks: <span>${totalGPA.toFixed(2)}</span>`;
+            let sscGPA = (sscTotal / 1050) * 25;
+            let hscGPA = (hscTotal / 1100) * 25;
+            let totalGPA = sscGPA + hscGPA;
+
+            document.getElementById("result2").innerHTML = `
+                Total GPA Marks: <span>${totalGPA.toFixed(2)}</span>
+                <div class="summary">SSC Contribution: ${sscGPA.toFixed(2)}, HSC Contribution: ${hscGPA.toFixed(2)}</div>
+            `;
             history2.unshift(`SSC: ${sscTotal}/1050, HSC: ${hscTotal}/1100, GPA: ${totalGPA.toFixed(2)}`);
             updateHistory("history2", history2);
         }
@@ -414,7 +508,11 @@
 
         function resetForm(pageId) {
             const inputs = document.querySelectorAll(`#${pageId} input`);
-            inputs.forEach(input => input.value = "");
+            inputs.forEach(input => {
+                input.value = "";
+                input.classList.remove('valid', 'invalid');
+                document.getElementById(`${input.id}-error`).textContent = '';
+            });
             document.getElementById(`result${pageId.slice(-1)}`).innerHTML = "";
         }
 
@@ -427,11 +525,71 @@
             });
         }
 
+        function exportHistory(historyId) {
+            const historyArray = historyId === 'history1' ? history1 : history2;
+            if (historyArray.length === 0) {
+                alert('No history to export!');
+                return;
+            }
+            const text = historyArray.join('\n');
+            const blob = new Blob([text], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${historyId}_gpa_history.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function shareResult(resultId) {
+            const resultBox = document.getElementById(resultId);
+            if (!resultBox.textContent) {
+                alert('No result to share!');
+                return;
+            }
+            const text = resultBox.textContent.replace(/\n/g, ' ').trim();
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Result copied to clipboard!');
+            }).catch(() => {
+                alert('Failed to copy result!');
+            });
+        }
+
+        function saveCalculation(pageId) {
+            const resultBox = document.getElementById(`result${pageId.slice(-1)}`);
+            if (!resultBox.textContent) {
+                alert('No result to save!');
+                return;
+            }
+            const savedCalculations = JSON.parse(localStorage.getItem('savedCalculations') || '[]');
+            const resultText = resultBox.textContent.replace(/\n/g, ' ').trim();
+            savedCalculations.push({
+                page: pageId,
+                result: resultText,
+                timestamp: new Date().toISOString()
+            });
+            localStorage.setItem('savedCalculations', JSON.stringify(savedCalculations));
+            alert('Calculation saved!');
+        }
+
+        function viewSavedCalculations() {
+            const savedCalculations = JSON.parse(localStorage.getItem('savedCalculations') || '[]');
+            if (savedCalculations.length === 0) {
+                alert('No saved calculations found!');
+                return;
+            }
+            const historyDiv = document.getElementById('history1').style.display !== 'none' ? document.getElementById('history1') : document.getElementById('history2');
+            historyDiv.innerHTML = "<h4>Saved Calculations</h4>" + 
+                savedCalculations.slice(0, 5).map(item => `<p>${item.page.toUpperCase()} - ${item.result} (Saved: ${new Date(item.timestamp).toLocaleString()})</p>`).join("");
+        }
+
         document.querySelectorAll("input").forEach(input => {
             input.addEventListener("input", function() {
                 if (this.value < 0) this.value = 0;
             });
         });
+
+        console.log('Script loaded, calculateGPA1 defined:', typeof calculateGPA1 === 'function');
     </script>
 </body>
 </html>
